@@ -48,7 +48,7 @@ export const registerUser = asyncHandler(async (req, res)=>{
 
  const otp =  Math.floor(1000 + Math.random() * 9000).toString(); 
 
-  const result = await sendingSms(phoneNumber );
+  const result = await sendingSms(phoneNumber ,otp);
   //console.log("informaton about the sending sms" ,result)
   if(result.success===false)
   {
