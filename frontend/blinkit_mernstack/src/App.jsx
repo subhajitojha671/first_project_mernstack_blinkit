@@ -37,7 +37,7 @@ function App() {
 
   return (
     <>
-    <h1 className='text-4xl bg-red-600 font-bold'>TESTING THE API</h1>
+    <h1 className='text-2xl bg-red-600 font-bold'>TESTING THE API</h1>
     <Outlet/>
     <button onClick={handleGetUser} 
     className='p-4 mt-10 bg-red-600'>Get currect user</button>
