@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
+import Navbar from "./components/Navbar.jsx ";
 import AppRoutes from "./routes/AppRoutes.jsx"
 /* =======================
    AXIOS INSTANCE
