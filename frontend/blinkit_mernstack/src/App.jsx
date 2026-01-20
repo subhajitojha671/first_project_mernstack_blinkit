@@ -1,39 +1,74 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-import axios from 'axios'
-function App() {
-  const handleGetUser = async () =>{
-    try {
+import React from "react";
+import axios from "axios";
+import { Outlet } from "react-router-dom";
 
-    const res = await axios.get(
-  "http://localhost:8000/api/v1/users/current-user",
-        {
-          withCredentials: true   // ✅ VERY IMPORTANT
-        }
+/* =======================
+   AXIOS INSTANCE
+======================= */
 
-)
-  
-  console.log(res);
+const api = axios.create({
+  baseURL: "http://localhost:8000/api/v1",
+  withCredentials: true, // send cookies automatically
+});
+
+/* =======================
+   AXIOS INTERCEPTOR (SIMPLE)
+======================= */
+
+api.interceptors.response.use(
+  (response) => {console.log("response", response);
+     return response},
+  async (error) => {
+    const originalRequest = error.config;
+    console.log(" org " , originalRequest ,"error", error )
+    // If access token expired
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        // Call refresh token API
+        await api.post("/users/refresh-access-token");
+
+        // Retry original request
+        return api(originalRequest);
+      } catch (refreshError) {
+        // Refresh token also expired
+      //  window.location.href = "/login";
       
-    } catch (error) {
-      console.log(error);
+        return Promise.reject(refreshError);
+      }
     }
+
+    return Promise.reject(error);
   }
+);
+
+/* =======================
+   APP COMPONENT
+======================= */
+
+function App() {
+
+  const handleGetUser = async () => {
+    try {
+      const res = await api.get("/users/current-user");
+      console.log("User:", res.data);
+    } catch (error) {
+      console.log("Get user error:", error.response?.data || error.message);
+    }
+  };
 
   const handleLogout = async () => {
-  try {
-    await axios.post(
-      "http://localhost:8000/api/v1/users/logout",
-      {},
-      { withCredentials: true }   // ✅ must send cookies
-    );
-
-    alert("Logged out successfully ✅");
-
-  } catch (error) {
-    console.log("Logout failed ❌", error.response?.data || error.message);
-  }
-};
+    try {
+      await api.post("/users/logout");
+      alert("Logged out successfully ✅");
+    } catch (error) {
+      console.log("Logout error:", error.response?.data || error.message);
+    }
+  };
 
   return (
     <>
@@ -45,7 +80,7 @@ function App() {
     <button onClick={handleLogout} 
     className='p-4 mt-4 bg-red-600'>logout</button>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
