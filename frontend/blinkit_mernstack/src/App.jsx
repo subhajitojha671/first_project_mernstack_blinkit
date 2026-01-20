@@ -1,6 +1,8 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import axios from 'axios'
+import Navbar from './components/Navbar'
+import AppRoutes from './routes/AppRoutes'
 function App() {
   const handleGetUser = async () =>{
     try {
@@ -37,13 +39,15 @@ function App() {
 
   return (
     <>
-    <h1 className='text-2xl bg-red-600 font-bold'>TESTING THE API</h1>
+    {/* <h1 className='text-2xl bg-red-600 font-bold'>TESTING THE API</h1>
     <Outlet/>
     <button onClick={handleGetUser} 
     className='p-4 mt-10 bg-red-600'>Get currect user</button>
     <br></br>
     <button onClick={handleLogout} 
-    className='p-4 mt-4 bg-red-600'>logout</button>
+    className='p-4 mt-4 bg-red-600'>logout</button> */}
+    <Navbar/>
+    <AppRoutes/>
     </>
   )
 }
