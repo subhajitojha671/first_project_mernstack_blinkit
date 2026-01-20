@@ -4,7 +4,6 @@ import { Outlet } from "react-router-dom";
 
 /* =======================
    AXIOS INSTANCE
-======================= */
 
 const api = axios.create({
   baseURL: "http://localhost:8000/api/v1",
@@ -13,7 +12,6 @@ const api = axios.create({
 
 /* =======================
    AXIOS INTERCEPTOR (SIMPLE)
-======================= */
 
 api.interceptors.response.use(
   (response) => {console.log("response", response);
@@ -72,13 +70,15 @@ function App() {
 
   return (
     <>
-    <h1 className='text-2xl bg-red-600 font-bold'>TESTING THE API</h1>
+    {/* <h1 className='text-2xl bg-red-600 font-bold'>TESTING THE API</h1>
     <Outlet/>
     <button onClick={handleGetUser} 
     className='p-4 mt-10 bg-red-600'>Get currect user</button>
     <br></br>
     <button onClick={handleLogout} 
-    className='p-4 mt-4 bg-red-600'>logout</button>
+    className='p-4 mt-4 bg-red-600'>logout</button> */}
+    <Navbar/>
+    <AppRoutes/>
     </>
   );
 }
