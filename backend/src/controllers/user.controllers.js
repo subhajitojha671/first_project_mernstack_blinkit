@@ -45,10 +45,9 @@ export const registerUser = asyncHandler(async (req, res)=>{
   {
     throw new ApiError(400 , "Invalid phone number"); //if length not equal to 12  , throw error
   }
-  const existedUser = await User.findOne({phoneNumber}); // find  the user in db , to check have any user  with same phone  number  if find then throw error
-  if(existedUser){
-    throw new ApiError(400,"User Already exists");
-  }
+  const user = await User.findOne({phoneNumber}); // find  the user in db , to check have any user  with same phone  number  if find then throw error
+  
+
 
 
  const otp =  Math.floor(1000 + Math.random() * 9000).toString();  // genarate the otp , which length is 4
@@ -60,7 +59,12 @@ export const registerUser = asyncHandler(async (req, res)=>{
     throw new ApiError(400 , `failed sent sms ${result.error.Details} `)
   }
 
- 
+ if(user)
+ {
+     user.otp = otp;
+     user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+    await user.save();
+ }else{
 
   const user = await User.create({ // create user 
     phoneNumber:phoneNumber,
@@ -70,6 +74,7 @@ export const registerUser = asyncHandler(async (req, res)=>{
     isVerify: false,
 
   })
+}
   
   //temp token genarate for identify  the user id 
   const tempToken = jwt.sign(
@@ -105,7 +110,7 @@ export const verifyOtp = asyncHandler(async (req, res) => {
 
   const user = await User.findById(userId).select("+otp +otpExpiry -refreshToken"); //find user base on this decoded userId
   if (!user) throw new ApiError(404, "User not found");
-  if (user.isVerify) throw new ApiError(400, "User already verified"); // check user already verify or not
+ // if (user.isVerify) throw new ApiError(400, "User already verified"); // check user already verify or not
 
 
   //otp validation 
@@ -176,4 +181,57 @@ export const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User logged out successfully"));
+});
+
+export const refreshAccessToken = asyncHandler(async (req, res) => {
+  // Get refresh token from cookies or body
+  const incomingRefreshToken =
+    req.cookies?.refreshToken || req.body?.refreshToken;
+
+  if (!incomingRefreshToken) {
+    throw new ApiError(401, "Unauthorized request");
+  }
+
+  try {
+    // Verify refresh token
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    // Find user from decoded ID
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token - user not found");
+    }
+
+    // Check if the stored refresh token matches
+    if (user.refreshToken !== incomingRefreshToken) {
+      throw new ApiError(401, "Refresh token has expired or is invalid");
+    }
+
+    // Generate new tokens
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+      user._id
+    );
+
+    const options = {
+      httpOnly: true,
+      secure: false,
+      sameSite:"lax"
+    };
+
+    // Send new tokens
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(
+        new ApiResponse(200, { accessToken, refreshToken }, "Access token refreshed")
+      );
+  } catch (error) {
+    console.error("Token refresh error:", error);
+    throw new ApiError(401, "Invalid or expired refresh token");
+  }
 });
