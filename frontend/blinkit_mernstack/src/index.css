@@ -1,1 +1,4 @@
 @import "tailwindcss";
+:root {
+  --blinkit-green: #0C831F;
+}

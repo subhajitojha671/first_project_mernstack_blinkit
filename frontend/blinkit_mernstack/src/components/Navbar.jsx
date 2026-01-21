@@ -1,35 +1,84 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = false; // change to true after login
+
+
+
   return (
-    <div className='stricky bg-yellow-300 text-2xl top-0 z-50 shadow-sm'>
-        <div className='flex items-center justify-between px-8 py-3 max-w-7xl mx-auto'>
+    <header className='stickey top-0 z-50 bg-white border-b'>
+      <div className='max-w-7xl mx-auto px-4 py-3 flex items-center gap-4'>
+           
+            {/* Logo */}
+            <Link
+              to ="/"
+              className='text-2xl font-extrabold text-[#0C831F]'
+            >
+              <span className='text-yellow-500'>Blink</span>it
+            </Link>
 
+             
+            {/* Delivery Info */}
+            <div className='hidden md:flex flex-col text-sm leading-tight'>
+              <span className='font-semibold'>Delivery in 10 minutes</span>
+              <span className='text-gray-500'>Kolkata, West Bengal</span>
+            </div>
 
-             {/* Logo */}
-             <Link to="/"  className='text-2xl font-bold text-blinkitGreen'> blinkit </Link>
+            {/* Search Bar */}
+            <div className='flex flex-1 relative'>
+              <span className="material-symbols-outlined text-gray-500"> search</span>
+              <input
+                  type='text'
+                  placeholder='Search for atta, dal, coke and more'
+                  className='w-full bg-gray-100 rounded-xl pl-10 pr-4 outline-none focus:ring-2 focus:ring-[#0C831F]'
+              />
+              
+            </div>
 
-             {/* Location */}
-             <div className="hidden md:block text-sm">
-                <p className='font-semibold' >Delivery in 10 mins</p>
-                <p className='text-gray-500'>Kolkata, India</p>
-             </div>
-
-             {/* Search */}
-             <div className='flex-1 mx-4'>
-                <input type='text'  placeholder='Search for products'  className='w-full px-4 py-2 rounded-lg bg-gray-100 outline-none'/>
-             </div>
-
-            {/* Cart */}
-            <button className='bg-blinkitGreen text-white px-4 py-2 rounded-lg'>
-                Cart
+            {/* Login */}
+            <button
+              onClick={() => navigate("/login")}
+              className="hidden md:block text-sm font-medium"
+            >
+              Login
             </button>
 
 
-        </div>
-      
-    </div>
+            {/* Cart */}
+            <button 
+                className={`relative px-4 py-2 rounded-xl font-medium text-white
+                         ${
+                           isLoggedIn
+                              ? "bg-[#0C831F] cursor-pointer"
+                              : "bg-gray-400 cursor-not-allowed"
+                          }`}
+                onClick={()=>{
+                  if(!isLoggedIn) return; //block click
+                  navigate("/mycart");
+                }}          
+            >    
+             My Cart
+
+            <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-1.5 rounded-full">
+               0
+            </span>
+            </button>
+           
+
+
+
+                 
+
+
+
+
+
+      </div>
+    </header>
   )
 }
 

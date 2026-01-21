@@ -1,8 +1,11 @@
 import React from "react";
 import axios from "axios";
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx ";
-import AppRoutes from "./routes/AppRoutes.jsx"
+import Navbar from "./components/Navbar.jsx";
+import AppRoutes from "./routes/AppRoutes.jsx";
+import Footer from "./components/Footer.jsx";
+
+
 /* =======================
    AXIOS INSTANCE
 
@@ -51,23 +54,23 @@ api.interceptors.response.use(
 
 function App() {
 
-  const handleGetUser = async () => {
-    try {
-      const res = await api.get("/users/current-user");
-      console.log("User:", res.data);
-    } catch (error) {
-      console.log("Get user error:", error.response?.data || error.message);
-    }
-  };
+  // const handleGetUser = async () => {
+  //   try {
+  //     const res = await api.get("/users/current-user");
+  //     console.log("User:", res.data);
+  //   } catch (error) {
+  //     console.log("Get user error:", error.response?.data || error.message);
+  //   }
+  // };
 
-  const handleLogout = async () => {
-    try {
-      await api.post("/users/logout");
-      alert("Logged out successfully ✅");
-    } catch (error) {
-      console.log("Logout error:", error.response?.data || error.message);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await api.post("/users/logout");
+  //     alert("Logged out successfully ✅");
+  //   } catch (error) {
+  //     console.log("Logout error:", error.response?.data || error.message);
+  //   }
+  // };
 
   return (
     <>
@@ -80,6 +83,7 @@ function App() {
     className='p-4 mt-4 bg-red-600'>logout</button> */}
     <Navbar/>
     <AppRoutes/>
+    <Footer/>
     </>
   );
 }
