@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from "react";
-import { instagram , facebook } from '../logo';
 import { Link } from 'react-router-dom';
+import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
+
 
 
 const FooterSection = ({ title, children }) => {
@@ -35,10 +36,9 @@ const FooterSection = ({ title, children }) => {
 };
 
 function Footer() {
-  
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 mt-16 border-t dark:border-gray-800 bottom-0  absolute w-full">
-      <div className="w-full mx-auto px-4 py-12">
+    <footer className="bg-gray-100 mt-16 border-t dark:border-gray-800">
+      <div className="max-w-7xl mx-auto px-4 py-12">
 
         {/* Top Grid */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
@@ -53,13 +53,23 @@ function Footer() {
             </p>
 
             {/* Social Icons */}
-            <div className="flex gap-4 mt-4 text-xl">
-              
-              <Link to="https://instagram.com" target="_blank">{instagram}</Link>
-              <Link to="https://twitter.com" target="_blank">{facebook}</Link>
-              <Link to="https://facebook.com" target="_blank">📘</Link>
-              <Link to="https://linkedin.com" target="_blank">💼</Link>
-            </div>
+             <div className="flex gap-4 mt-4 text-xl">
+                  <a href="https://instagram.com" target="_blank" rel="noreferrer">
+                      <FaInstagram />
+                  </a>
+
+                  <a href="https://twitter.com" target="_blank" rel="noreferrer">
+                      <FaTwitter />
+                  </a>
+
+                  <a href="https://facebook.com" target="_blank" rel="noreferrer">
+                     <FaFacebook />
+                  </a>
+
+                  <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+                     <FaLinkedin />
+                  </a>
+    </div>
           </div>
 
           {/* Company */}

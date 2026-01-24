@@ -1,18 +1,27 @@
 import React from 'react'
+import categories from "../data/categories";
+import CategoryCard from "../components/CategoryCard";
 
-function Home() {
-  return (
-     <div className="max-w-7xl mx-auto px-4 mt-6">
-      <h2 className="text-xl font-semibold mb-4">
-        Welcome to Blinkit Clone 🛒
+const Home =() =>{
+  return(
+     <div className="max-w-7xl mx-auto px-4 py-6">
+
+      {/* Heading */}
+      <h2 className="text-lg font-semibold mb-4">
+        Shop by Category
       </h2>
 
-      <p className="text-gray-600">
-        Grocery delivery in minutes.
-      </p>
+      {/* Categories Grid */}
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
+        {categories.map((cat) => (
+          <CategoryCard key={cat.id} category={cat} />
+        ))}
+      </div>
+
     </div>
-  )
-}
+  );
+};
+  
 
 export default Home
 
